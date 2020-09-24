@@ -1,0 +1,12 @@
+{
+  "name": "cartrack",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "4.13.4",
+    "beebotte": "1.0.0"
+  }
+}
