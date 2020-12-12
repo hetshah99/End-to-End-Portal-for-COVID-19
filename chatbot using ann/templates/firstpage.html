@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>Covid19 Chatbot</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+  integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+<style>
+  body {
+    font-family: "Lato", sans-serif
+  }
+  .chat-message {
+    width: 80%;
+    padding: 15px;
+    margin: 10px;
+    background: #1ddced;
+    border-radius: 20px;
+    color: #fff;
+    font-size: 18px;
+    float: right;
+  }
+
+  .chatbot {
+    background: #ccc;
+    float: left;
+  }
+
+
+  .loader {
+    left: 48%;
+  }
+
+  .line {
+    animation: expand 1s ease-in-out infinite;
+    border-radius: 10px;
+    display: inline-block;
+    margin: 0 3px;
+    width: 2px;
+    height: 25px;
+  }
+
+  .line:nth-child(1) {
+    background: #000;
+  }
+
+  .line:nth-child(2) {
+    animation-delay: 180ms;
+    background: #595959;
+  }
+
+  .line:nth-child(3) {
+    animation-delay: 360ms;
+    background: #f2f2f2;
+  }
+
+  .line:nth-child(4) {
+    animation-delay: 540ms;
+    background: #fff;
+  }
+
+  @keyframes expand {
+    0% {
+      transform: scale(1);
+    }
+
+    25% {
+      transform: scale(2);
+    }
+  }
+
+  .col-md-11 {
+    height: 500px;
+    overflow-y: scroll;
+
+  }
+
+  .col-md-11::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  .col-md-11::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background: rgba(0, 0, 0, .1);
+  }
+</style>
+
+<body>
+  <!-- Navbar -->
+  <div class="w3-top">
+    <div class="w3-bar w3-black w3-card">
+      <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)"
+        onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+      <a href="{{ url_for('home') }}" class="w3-bar-item w3-button w3-padding-large">HOME</a>
+    
+    </div>
+  </div>
+  </div>
+
+  
+ 
+  <div class="w3-content" style="max-width:2000px;margin-top:20px">
+
+    
+    <div class="w3-container w3-content w3-center w3-padding-64" style="max-width:800px" id="band">
+      <h2 class="w3-wide">Check Your Information</h2>
+      <h2 class="w3-wide">About Covid19</h2>
+    
+      </div>
+
+    <div class="container" style="height:60px; ">
+      <div class="row">
+        <div class="col"></div>
+        <div class="col-9">
+          <div class="container col-md-11" id="container"  style="padding-top: 10px;height:250px;">
+
+            <div class="chat-message chatbot" role="alert">
+              <b>Chatbot:</b> Welcome, please Enter your query, I will respond with useful information about
+              COVID-19
+            </div>
+          </div>
+          <div class="form-group">
+            <input type="text" autocomplete="off" name="user_input" class="form-control" id="userInput"
+               placeholder="Enter your query"><br><center>
+            <button type="submit" class="btn btn-primary" id="btn1">Q/A</button>
+           <button type="submit" class="btn btn-primary" id="btn2" style="">Fake News</button>
+          </center>
+          </div>
+        </div>
+        <div class="col"></div>
+      </div>
+    </div>
+    <!-- End Page Content -->
+  </div>
+  <!-- Footer -->
+  <footer class="w3-container w3-padding-25 w3-center w3-opacity w3-light-grey w3-xlarge ">
+ 
+  </footer>
+
+  <script>
+  
+    function myFunction() {
+      var x = document.getElementById("navDemo");
+      if (x.className.indexOf("w3-show") == -1) {
+        x.className += " w3-show";
+      } else {
+        x.className = x.className.replace(" w3-show", "");
+      }
+    }
+
+  
+    var input = document.getElementById("userInput")
+    
+    input.addEventListener("keyup", function (event) {
+      
+      if (event.keyCode === 13) {
+        
+        event.preventDefault();
+        
+        document.getElementById("btn1").click();
+      }
+    });
+  </script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('#container').scrollTop($('#container')[0].scrollHeight);
+
+      $("#btn1").click(function () {
+        var user_input = $("#userInput").val();
+        $("#container").append('<div class="chat-message" role="alert"><b>User:</b> ' + user_input + ' </div>');
+        $("#container").append('<div class="chat-message chatbot" role="alert"><div class="loader"> <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>  </div> </div>');
+        $("#container").animate({ scrollTop: 20000000 }, "slow");
+        $.get("/get", { user_input }).done(function (data) {
+          $("#container").children("div:last").remove()
+          $("#container").append('<div class="chat-message chatbot" role="alert"><b>Chatbot:</b> ' + data + ' </div>');
+          $("#container").animate({ scrollTop: 20000000 }, "slow");
+        });
+      });
+
+
+      $("#btn2").click(function () {
+        var user_input = $("#userInput").val();
+        $("#container").append('<div class="chat-message" role="alert"><b>User:</b> ' + user_input + ' </div>');
+        $("#container").append('<div class="chat-message chatbot" role="alert"><div class="loader"> <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>  </div> </div>');
+        $("#container").animate({ scrollTop: 20000000 }, "slow");
+        $.get("/get1", { user_input }).done(function (data) {
+          $("#container").children("div:last").remove()
+          $("#container").append('<div class="chat-message chatbot" role="alert"><b>Chatbot:</b> ' + data + ' </div>');
+          $("#container").animate({ scrollTop: 20000000 }, "slow");
+        });
+      });
+    });
+  </script>
+</body>
+</html>

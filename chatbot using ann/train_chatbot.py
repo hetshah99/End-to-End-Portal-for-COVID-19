@@ -39,6 +39,12 @@ print (len(words), "unique lemmatized words", words)
 pickle.dump(words,open('words.pkl','wb'))
 pickle.dump(classes,open('classes.pkl','wb'))
 
+print(words)
+
+print()
+
+print(classes)
+
 training = []
 output_empty = [0] * len(classes)
 for doc in documents:
@@ -52,6 +58,8 @@ for doc in documents:
     output_row[classes.index(doc[1])] = 1
 
     training.append([bag, output_row])
+
+print(training)
 random.shuffle(training)
 training = np.array(training)
 train_x = list(training[:,0])
@@ -61,15 +69,16 @@ print("Training data created")
 
 model = Sequential()
 model.add(Dense(128, input_shape=(len(train_x[0]),), activation='relu'))
-model.add(Dropout(0.5))
+model.add(Dropout(0.3))
 model.add(Dense(64, activation='relu'))
-model.add(Dropout(0.5))
+model.add(Dropout(0.3))
 model.add(Dense(len(train_y[0]), activation='softmax'))
-
+print(len(train_y[0]))
 sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
 
-hist = model.fit(np.array(train_x), np.array(train_y), epochs=250, batch_size=5, verbose=1)
+hist = model.fit(np.array(train_x), np.array(train_y), epochs=350, batch_size=5, verbose=1)
+print(hist)
 model.save('chatbot_model.h5', hist)
 
 print("model created")
